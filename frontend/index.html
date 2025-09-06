@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ru-RU">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Lab1</title>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="icon" type="image/png" href="images/duck.PNG">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Viaoda+Libre&display=swap" rel="stylesheet">
+</head>
+<body>
+<div id="main_container">
+    <div id="background_image"></div>
+    <div id="blur"></div>
+    <header id="lab">
+        <h1>Веб-программирование. Лабораторная работа №1. Вариант 464900</h1>
+        <div id="container_with_image">
+            <h2>Абдуллаева София Улугбековна. P3208</h2>
+            <a href="https://github.com/LunarSonic" target="_blank">
+                <img id="githubIcon" src="images/github.svg" alt="">
+            </a>
+        </div>
+    </header>
+    <div id="form_and_canvas_container">
+        <form id="main_form">
+            <div id="choice_of_x">
+                <span class="label_name">Выберите X:</span>
+                <label><input class="checkboxForX" type="checkbox" name="x" value="-5">-5</label>
+                <label><input class="checkboxForX" type="checkbox" name="x" value="-4">-4</label>
+                <label><input class="checkboxForX" type="checkbox" name="x" value="-3">-3</label>
+                <label><input class="checkboxForX" type="checkbox" name="x" value="-2">-2</label>
+                <label><input class="checkboxForX" type="checkbox" name="x" value="-1">-1</label>
+                <label><input class="checkboxForX" type="checkbox" name="x" value="0">0</label>
+                <label><input class="checkboxForX" type="checkbox" name="x" value="1">1</label>
+                <label><input class="checkboxForX" type="checkbox" name="x" value="2">2</label>
+                <label><input class="checkboxForX" type="checkbox" name="x" value="3">3</label>
+            </div>
+            <div id="choice_of_y">
+                <span class="label_name">Введите Y:</span>
+                <label><input type="number" id="y" placeholder="От -3 до 3" min="-3" max="3" step="0.001"></label>
+            </div>
+            <div id="choice_of_r">
+                <span class="label_name">Выберите R:</span>
+                <label><input class="radioForR" type="radio" name="r" value="1">1</label>
+                <label><input class="radioForR" type="radio" name="r" value="1.5">1.5</label>
+                <label><input class="radioForR" type="radio" name="r" value="2">2</label>
+                <label><input class="radioForR" type="radio" name="r" value="2.5">2.5</label>
+                <label><input class="radioForR" type="radio" name="r" value="3">3</label>
+            </div>
+            <div id="button_container">
+                <button id="submit_button" type="button">Подтвердить</button>
+                <button id="clear_form_button" type="button">Очистить форму</button>
+                <button id="clear_table_button" type="button">Очистить таблицу</button>
+            </div>
+            <div id="error" hidden></div>
+        </form>
+        <div id="main_canvas">
+            <canvas id="coordinate_plane" width="400" height="400"></canvas>
+        </div>
+    </div>
+    <div id="table_container">
+        <table id="result_table">
+            <thead>
+            <tr>
+                <th>X</th>
+                <th>Y</th>
+                <th>R</th>
+                <th>Попали ли вы?</th>
+                <th>Текущая дата</th>
+                <th>Время работы скрипта (нс)</th>
+            </tr>
+            </thead>
+            <tbody id="body_for_table"></tbody>
+        </table>
+    </div>
+</div>
+</body>
+<script src="js/canvas.js"></script>
+<script src="js/mainScript.js"></script>
+</html>

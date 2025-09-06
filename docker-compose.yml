@@ -1,0 +1,18 @@
+networks:
+  web:
+
+services:
+  java-fcgi:
+    build:
+      context: .
+    networks:
+      - web
+  nginx:
+    build:
+      context: ./frontend
+    ports:
+      - "9001:80"
+    depends_on:
+      - java-fcgi
+    networks:
+      - web

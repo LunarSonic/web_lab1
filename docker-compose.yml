@@ -5,6 +5,7 @@ services:
   java-fcgi:
     build:
       context: .
+      dockerfile: backend/Dockerfile
     networks:
       - web
   nginx:

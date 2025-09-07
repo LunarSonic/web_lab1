@@ -5,6 +5,7 @@ const textMargin = 9
 const mainColor = '#857466'
 const center = canvasSize / 2
 const scale = canvasSize / gridPoints
+export {initCanvas, drawPointOnCoordinatePlane, redraw}
 
 function initCanvas() {
     const canvas = document.getElementById('coordinate_plane');

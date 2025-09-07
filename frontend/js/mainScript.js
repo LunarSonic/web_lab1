@@ -8,6 +8,7 @@ const tableWithResults = document.getElementById("result_table")
 let lastCheckedX = null
 let lastSelectedR = null
 let currentR = null
+import {initCanvas, drawPointOnCoordinatePlane, redraw} from "./canvas";
 
 window.onload = function () {
     redraw()

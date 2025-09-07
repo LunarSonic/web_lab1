@@ -171,6 +171,25 @@ header {
     font-size: 20px;
     margin-top: 20px;
     text-align: left;
+    opacity: 0;
+}
+
+@keyframes fadeInAndFadeOut {
+    0% {
+        opacity: 0;
+        animation-timing-function: ease-in;
+    }
+    25% {
+        opacity: 1;
+        animation-timing-function: ease-out;
+    }
+    75% {
+        opacity: 1;
+        animation-timing-function: ease-in;
+    }
+    100% {
+        opacity: 0;
+    }
 }
 
 #table_container {
@@ -199,6 +218,7 @@ header {
     padding: 7px 6px;
     border: 2px solid #857466;
 }
+
 
 
 

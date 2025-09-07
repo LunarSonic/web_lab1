@@ -7,7 +7,7 @@ const clearTableButton = document.getElementById('clear_table_button')
 const tableWithResults = document.getElementById("result_table")
 let lastCheckedX = null
 let lastSelectedR = null
-let currentR = null;
+let currentR = null
 
 window.onload = function () {
     redraw()
@@ -82,16 +82,23 @@ xCheckbox.forEach(x => {
 
 function showMessage(message) {
     const errorField = document.getElementById('error')
+    errorField.onanimationend = null
     if (message) {
         errorField.hidden = false
+        errorField.style.animation = 'fadeInAndFadeOut 3s'
         errorField.textContent = message
+        errorField.onanimationend = () => {
+            errorField.hidden = true
+            errorField.textContent = ""
+        }
     } else {
         errorField.hidden = true
+        errorField.style.animation = 'none'
         errorField.textContent = ""
     }
 }
 
-function submit() {
+async function submit() {
     const y = yInput.value.trim()
     const checkedX = document.querySelector('#choice_of_x input[type="checkbox"]:checked')
     const selectedR = document.querySelector('#choice_of_r input[type="radio"]:checked')
@@ -104,7 +111,7 @@ function submit() {
     if (isXValid && isYValid && isRValid) {
         const x = checkedX.value;
         const r = selectedR.value;
-        sendRequest(x, y, r);
+        await sendRequest(x, y, r);
     }
 }
 submitButton.addEventListener('click', submit)
@@ -149,10 +156,6 @@ const validateX = function() {
 }
 
 const validateY = function(y) {
-    if (y === "") {
-        showMessage("Необходимо ввести координату Y!");
-        return false;
-    }
     const yFloat = parseFloat(y);
     if (isNaN(yFloat)) {
         showMessage("Координата Y должна быть числом!");

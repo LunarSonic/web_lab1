@@ -9,43 +9,39 @@ let lastCheckedX = null
 let lastSelectedR = null
 let currentR = null;
 
-redraw()
-
 window.onload = function () {
+    redraw()
     let history = JSON.parse(localStorage.getItem('results') || '[]')
     history.forEach(addNewRow)
 }
 
-function sendRequest (checkedX, enteredY, selectedR) {
+async function sendRequest (checkedX, enteredY, selectedR) {
     const dataForRequest = {
         x: checkedX,
         y: enteredY,
         r: selectedR
     }
-    $.ajax({
-        url: "/api?" + $.param(dataForRequest),
-        type: "GET",
-        dataType: "json",
-        success: function (response) {
-            if (!response.error) {
-                let data = {
-                    x: dataForRequest.x,
-                    y: dataForRequest.y,
-                    r: dataForRequest.r,
-                    hit: response.hit,
-                    serverTime: response.serverTime,
-                    scriptTime: response.scriptTime
-                }
-                addNewRow(data)
-                saveResultToLocalStorage(data)
-                const ctx = initCanvas()
-                drawPointOnCoordinatePlane(ctx, parseInt(dataForRequest.x), parseFloat(dataForRequest.y), response.hit)
+    try {
+        const parameters = new URLSearchParams(dataForRequest).toString()
+        const response = await fetch(`/api?${parameters}`)
+        if (response.ok) {
+            const result = await response.json()
+            let data = {
+                x: result.x,
+                y: result.y,
+                r: result.r,
+                hit: result.hit,
+                serverTime: result.serverTime,
+                scriptTime: result.scriptTime
             }
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            showMessage(errorThrown || textStatus)
+            addNewRow(data)
+            saveResultToLocalStorage(data)
+            const ctx = initCanvas()
+            drawPointOnCoordinatePlane(ctx, parseInt(result.x), parseFloat(result.y), result.hit)
         }
-    })
+    } catch (error) {
+        showMessage(error.message)
+    }
 }
 
 function addNewRow(data) {

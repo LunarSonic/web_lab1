@@ -1,3 +1,4 @@
+import {initCanvas, drawPointOnCoordinatePlane, redraw} from "./canvas.js";
 const yInput = document.getElementById('y')
 const xCheckbox = document.querySelectorAll('#choice_of_x input[type="checkbox"]')
 const rChoice = document.querySelectorAll('#choice_of_r input[type="radio"]')
@@ -8,7 +9,6 @@ const tableWithResults = document.getElementById("result_table")
 let lastCheckedX = null
 let lastSelectedR = null
 let currentR = null
-import {initCanvas, drawPointOnCoordinatePlane, redraw} from "./canvas";
 
 window.onload = function () {
     redraw()

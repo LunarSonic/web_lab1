@@ -9,6 +9,7 @@ import java.util.Map;
 
 public class RequestHandler {
     private static final String HTTP_RESPONSE = """
+            Connection: keep-alive
             Content-Type: application/json
             Content-Length: %d
             

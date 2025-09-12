@@ -39,11 +39,20 @@ async function sendRequest (checkedX, enteredY, selectedR) {
             saveResultToLocalStorage(data)
             const ctx = initCanvas()
             drawPointOnCoordinatePlane(ctx, parseInt(result.x), parseFloat(result.y), result.hit)
+        } else {
+            const errorField = document.getElementById('error')
+            if (errorField) {
+                showMessage(errorField, `Ошибка при отправке запроса: ${response.status}`)
+            }
         }
     } catch (error) {
-        showMessage(error.message)
+        const errorField = document.getElementById('error')
+        if (errorField) {
+            showMessage(errorField, `Ошибка: ${error.message}`)
+        }
     }
 }
+
 
 function addNewRow(data) {
     const tbody = tableWithResults.querySelector('tbody')
@@ -61,6 +70,7 @@ function saveResultToLocalStorage(data) {
     savedResult.push(data)
     localStorage.setItem('results', JSON.stringify(savedResult))
 }
+
 
 function chooseOnlyOneCheckbox(event) {
     const clickedCheckbox = event.target
@@ -81,21 +91,20 @@ xCheckbox.forEach(x => {
     x.addEventListener('change', chooseOnlyOneCheckbox)
 })
 
-function showMessage(message) {
-    const errorField = document.getElementById('error')
-    errorField.onanimationend = null
+function showMessage(element, message) {
+    element.onanimationend = null
     if (message) {
-        errorField.hidden = false
-        errorField.style.animation = 'fadeInAndFadeOut 3s'
-        errorField.textContent = message
-        errorField.onanimationend = () => {
-            errorField.hidden = true
-            errorField.textContent = ""
+        element.hidden = false
+        element.style.animation = 'fadeInAndFadeOut 3s'
+        element.textContent = message
+        element.onanimationend = () => {
+            element.hidden = true
+            element.textContent = ""
         }
     } else {
-        errorField.hidden = true
-        errorField.style.animation = 'none'
-        errorField.textContent = ""
+        element.hidden = true
+        element.style.animation = 'none'
+        element.textContent = ""
     }
 }
 
@@ -103,16 +112,13 @@ async function submit() {
     const y = yInput.value.trim()
     const checkedX = document.querySelector('#choice_of_x input[type="checkbox"]:checked')
     const selectedR = document.querySelector('#choice_of_r input[type="radio"]:checked')
-    if (!checkedX && y === "" && !selectedR) {
-        showMessage("Необходимо ввести X, Y, R!")
-    }
-    const isXValid = validateX();
-    const isYValid = validateY(y);
-    const isRValid = validateR();
+    const isXValid = validateX()
+    const isYValid = validateY(y)
+    const isRValid = validateR()
     if (isXValid && isYValid && isRValid) {
-        const x = checkedX.value;
-        const r = selectedR.value;
-        await sendRequest(x, y, r);
+        const x = checkedX.value
+        const r = selectedR.value
+        await sendRequest(x, y, r)
     }
 }
 submitButton.addEventListener('click', submit)
@@ -149,34 +155,43 @@ rChoice.forEach(radio => {
 
 const validateX = function() {
     const checkedX = document.querySelectorAll('input[type="checkbox"]:checked')
+    const xErrorField = document.getElementById("errorX")
     if (checkedX.length === 0) {
-        showMessage("Необходимо выбрать координату X!");
-        return false;
+        showMessage(xErrorField, "Необходимо выбрать координату X!")
+        return false
+    } else {
+        showMessage(xErrorField, "")
+        return true
     }
-    return true
 }
 
 const validateY = function(y) {
-    const yFloat = parseFloat(y);
-    if (isNaN(yFloat)) {
-        showMessage("Координата Y должна быть числом!");
-        return false;
+    const yErrorField = document.getElementById("errorY")
+    const yFloat = parseFloat(y)
+    if (y === '') {
+        showMessage(yErrorField, "Не введена координата Y!")
+        return false
+    } else if (isNaN(yFloat)) {
+        showMessage(yErrorField, "Координата Y должна быть числом!")
+        return false
+    } else if (yFloat < -3 || yFloat > 3) {
+        showMessage(yErrorField, "Координата Y должна принимать значение от -3 до 3!")
+        return false
+    } else {
+        showMessage(yErrorField, "")
+        return true
     }
-    if (yFloat < -3 || yFloat > 3) {
-        showMessage("Координата Y должна принимать значение от -3 до 3!");
-        return false;
-    }
-    return true;
 }
 
 
 const validateR = function() {
+    const rErrorField = document.getElementById("errorR")
     const selectedR = document.querySelector('input[type="radio"]:checked')
     if (!selectedR) {
-        showMessage("Необходимо выбрать координату R!");
+        showMessage(rErrorField, "Необходимо выбрать координату R!")
         return false;
+    } else {
+        showMessage(rErrorField, "")
+        return true
     }
-    return true
 }
-
-

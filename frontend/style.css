@@ -80,7 +80,6 @@ body {
 }
 
 #choice_of_x label {
-    display: inline-block;
     margin-right: 8px;
 }
 
@@ -91,15 +90,16 @@ body {
     accent-color: #857466;
 }
 
-#choice_of_y label {
-    display: inline-block;
-    margin-top: 20px;
-    margin-bottom: 20px;
+#choice_of_x,
+#choice_of_y,
+#choice_of_r {
+    margin: 40px 0;
+    position: relative;
 }
 
-#choice_of_r label {
-    display: inline-block;
-    margin-right: 8px;
+#choice_of_y {
+    margin-top: 20px;
+    margin-bottom: 30px;
 }
 
 #y {
@@ -158,12 +158,14 @@ body {
     margin-top: 30px;
 }
 
-#error {
+.error {
+    position: absolute;
+    bottom: -26px;
     font-weight: bold;
     font-family: 'Playfair Display', serif;
+    width: 100%;
     color: #AB452B;
-    font-size: 20px;
-    margin-top: 20px;
+    font-size: 15px;
     text-align: left;
     opacity: 0;
 }
@@ -187,7 +189,7 @@ body {
 }
 
 #table_container {
-    margin: 20px 25px;
+    margin: 70px 25px;
 }
 
 #result_table {

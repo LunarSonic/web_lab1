@@ -9,7 +9,7 @@ public class Validation {
     private final Map<String, String> coordinates;
     public static final Set<Integer> availableX = Set.of(-5, -4, -3, -2, -1, 0, 1, 2, 3);
     public static final Set<Float> availableR = Set.of(1F, 1.5F, 2F, 2.5F, 3F);
-    public static final String floatPattern = "^-?(?:\\d+(\\.\\d+)?|\\.\\d+)$";
+    public static final String floatPattern = "^-?(?:0|[1-9][0-9]*)(?:\\.[0-9]+)?$";
 
     public Validation(Map<String, String> coordinates) {
         this.coordinates = coordinates;

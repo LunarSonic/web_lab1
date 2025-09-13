@@ -18,6 +18,7 @@ window.onload = function () {
 }
 
 async function sendRequest (checkedX, enteredY, selectedR) {
+    const errorField = document.getElementById('error')
     const dataForRequest = {
         x: checkedX,
         y: enteredY,
@@ -41,13 +42,11 @@ async function sendRequest (checkedX, enteredY, selectedR) {
             const ctx = initCanvas()
             drawPointOnCoordinatePlane(ctx, parseInt(result.x), parseFloat(result.y), result.hit)
         } else {
-            const errorField = document.getElementById('error')
             if (errorField) {
                 showMessage(errorField, `Ошибка при отправке запроса: ${response.status}`)
             }
         }
     } catch (error) {
-        const errorField = document.getElementById('error')
         if (errorField) {
             showMessage(errorField, `Ошибка: ${error.message}`)
         }

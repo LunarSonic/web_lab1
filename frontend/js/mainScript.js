@@ -6,6 +6,7 @@ const submitButton = document.getElementById('submit_button')
 const clearFormButton = document.getElementById('clear_form_button')
 const clearTableButton = document.getElementById('clear_table_button')
 const tableWithResults = document.getElementById("result_table")
+const floatPattern = /^-?(?:\d+(\.\d+)?|\.\d+)$/;
 let lastCheckedX = null
 let lastSelectedR = null
 let currentR = null
@@ -167,14 +168,15 @@ const validateX = function() {
 
 const validateY = function(y) {
     const yErrorField = document.getElementById("errorY")
-    const yFloat = parseFloat(y)
     if (y === '') {
         showMessage(yErrorField, "Не введена координата Y!")
         return false
-    } else if (isNaN(yFloat)) {
+    } else if (!floatPattern.test(y)) {
         showMessage(yErrorField, "Координата Y должна быть числом!")
         return false
-    } else if (yFloat < -3 || yFloat > 3) {
+    }
+    const yFloat = parseFloat(y)
+    if (yFloat < -3 || yFloat > 3) {
         showMessage(yErrorField, "Координата Y должна принимать значение от -3 до 3!")
         return false
     } else {

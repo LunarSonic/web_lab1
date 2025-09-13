@@ -57,7 +57,7 @@ async function sendRequest (checkedX, enteredY, selectedR) {
 
 function addNewRow(data) {
     const tbody = tableWithResults.querySelector('tbody')
-    let row = tbody.insertRow(0)
+    let row = tbody.insertRow(-1)
     row.insertCell(0).textContent = data.x
     row.insertCell(1).textContent = data.y
     row.insertCell(2).textContent = data.r

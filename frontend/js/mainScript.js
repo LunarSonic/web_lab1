@@ -2,7 +2,7 @@ import {initCanvas, drawPointOnCoordinatePlane, redraw} from "./canvas.js";
 const yInput = document.getElementById('y')
 const xCheckbox = document.querySelectorAll('#choice_of_x input[type="checkbox"]')
 const rChoice = document.querySelectorAll('#choice_of_r input[type="radio"]')
-const submitButton = document.getElementById('submit_button')
+const mainForm = document.getElementById("main_form")
 const clearFormButton = document.getElementById('clear_form_button')
 const clearTableButton = document.getElementById('clear_table_button')
 const tableWithResults = document.getElementById("result_table")
@@ -72,7 +72,6 @@ function saveResultToLocalStorage(data) {
     localStorage.setItem('results', JSON.stringify(savedResult))
 }
 
-
 function chooseOnlyOneCheckbox(event) {
     const clickedCheckbox = event.target
     if (clickedCheckbox.checked) {
@@ -109,7 +108,8 @@ function showMessage(element, message) {
     }
 }
 
-async function submit() {
+async function handleFormSubmission(event) {
+    event.preventDefault()
     const y = yInput.value.trim()
     const checkedX = document.querySelector('#choice_of_x input[type="checkbox"]:checked')
     const selectedR = document.querySelector('#choice_of_r input[type="radio"]:checked')
@@ -122,12 +122,10 @@ async function submit() {
         await sendRequest(x, y, r)
     }
 }
-submitButton.addEventListener('click', submit)
+mainForm.addEventListener('submit', handleFormSubmission)
 
 function clearForm() {
-    xCheckbox.forEach(x => x.checked = false)
-    yInput.value = ''
-    rChoice.forEach(r => r.checked = false)
+    mainForm.reset()
     redraw()
 }
 clearFormButton.addEventListener('click', clearForm)

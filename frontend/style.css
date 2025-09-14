@@ -75,12 +75,8 @@ body {
     margin-left: 20px;
 }
 
-#main_form > .label_name {
+#main_form .label_name {
     margin-right: 10px;
-}
-
-#choice_of_x label {
-    margin-right: 8px;
 }
 
 #choice_of_x input[type='checkbox'],

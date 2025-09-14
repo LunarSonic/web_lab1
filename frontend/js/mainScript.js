@@ -1,13 +1,13 @@
 import {initCanvas, drawPointOnCoordinatePlane, redraw} from "./canvas.js";
 const yInput = document.getElementById('y')
-const xCheckbox = document.querySelectorAll('#choice_of_x input[type="checkbox"]')
+const xSelect = document.getElementById('x')
 const rChoice = document.querySelectorAll('#choice_of_r input[type="radio"]')
 const mainForm = document.getElementById("main_form")
 const clearFormButton = document.getElementById('clear_form_button')
 const clearTableButton = document.getElementById('clear_table_button')
 const tableWithResults = document.getElementById("result_table")
 const floatPattern = /^-?(?:0|[1-9][0-9]*)(?:\.[0-9]+)?$/
-let lastCheckedX = null
+
 let lastSelectedR = null
 let currentR = null
 
@@ -16,6 +16,7 @@ window.onload = function () {
     let history = JSON.parse(localStorage.getItem('results') || '[]')
     history.forEach(addNewRow)
 }
+
 
 async function sendRequest (checkedX, enteredY, selectedR) {
     const errorField = document.getElementById('error')
@@ -71,25 +72,6 @@ function saveResultToLocalStorage(data) {
     localStorage.setItem('results', JSON.stringify(savedResult))
 }
 
-function chooseOnlyOneCheckbox(event) {
-    const clickedCheckbox = event.target
-    if (clickedCheckbox.checked) {
-        // если выбрали новый чекбокс
-        if (lastCheckedX !== clickedCheckbox && lastCheckedX) {
-            lastCheckedX.checked = false
-        }
-        lastCheckedX = clickedCheckbox
-    }
-    else {
-        if (lastCheckedX === clickedCheckbox) {
-            lastCheckedX = null
-        }
-    }
-}
-xCheckbox.forEach(x => {
-    x.addEventListener('change', chooseOnlyOneCheckbox)
-})
-
 function showMessage(element, message) {
     element.onanimationend = null
     if (message) {
@@ -110,18 +92,18 @@ function showMessage(element, message) {
 async function handleFormSubmission(event) {
     event.preventDefault()
     const y = yInput.value.trim()
-    const checkedX = document.querySelector('#choice_of_x input[type="checkbox"]:checked')
     const selectedR = document.querySelector('#choice_of_r input[type="radio"]:checked')
     const isXValid = validateX()
     const isYValid = validateY(y)
     const isRValid = validateR()
     if (isXValid && isYValid && isRValid) {
-        const x = checkedX.value
+        const x = xSelect.value
         const r = selectedR.value
         await sendRequest(x, y, r)
     }
 }
 mainForm.addEventListener('submit', handleFormSubmission)
+
 
 function clearForm() {
     mainForm.reset()
@@ -136,6 +118,7 @@ function clearTable() {
     tbody.innerHTML = ''
 }
 clearTableButton.addEventListener('click', clearTable)
+
 
 function handleRadioChange(event) {
     const currentRadio = event.target
@@ -152,9 +135,9 @@ rChoice.forEach(radio => {
 
 
 const validateX = function() {
-    const checkedX = document.querySelectorAll('input[type="checkbox"]:checked')
+    const x = xSelect.value
     const xErrorField = document.getElementById("errorX")
-    if (checkedX.length === 0) {
+    if (x === "") {
         showMessage(xErrorField, "Необходимо выбрать координату X!")
         return false
     } else {
@@ -162,6 +145,7 @@ const validateX = function() {
         return true
     }
 }
+
 
 const validateY = function(y) {
     const yErrorField = document.getElementById("errorY")
@@ -188,7 +172,7 @@ const validateR = function() {
     const selectedR = document.querySelector('input[type="radio"]:checked')
     if (!selectedR) {
         showMessage(rErrorField, "Необходимо выбрать координату R!")
-        return false;
+        return false
     } else {
         showMessage(rErrorField, "")
         return true

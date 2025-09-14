@@ -25,16 +25,19 @@
     <div id="form_and_canvas_container">
         <form id="main_form" method="get">
             <div id="choice_of_x">
-                <span class="label_name">Выберите X:</span>
-                <label><input class="checkboxForX" type="checkbox" name="x" value="-5">-5</label>
-                <label><input class="checkboxForX" type="checkbox" name="x" value="-4">-4</label>
-                <label><input class="checkboxForX" type="checkbox" name="x" value="-3">-3</label>
-                <label><input class="checkboxForX" type="checkbox" name="x" value="-2">-2</label>
-                <label><input class="checkboxForX" type="checkbox" name="x" value="-1">-1</label>
-                <label><input class="checkboxForX" type="checkbox" name="x" value="0">0</label>
-                <label><input class="checkboxForX" type="checkbox" name="x" value="1">1</label>
-                <label><input class="checkboxForX" type="checkbox" name="x" value="2">2</label>
-                <label><input class="checkboxForX" type="checkbox" name="x" value="3">3</label>
+                <label for="x" class="label_name">Выберите X:</label>
+                <select name="choice_of_x" id="x">
+                    <option>-5</option>
+                    <option>-4</option>
+                    <option>-3</option>
+                    <option>-2</option>
+                    <option>-1</option>
+                    <option>0</option>
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                </select>
                 <div class="error" id="errorX"></div>
             </div>
             <div id="choice_of_y">

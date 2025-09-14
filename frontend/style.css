@@ -79,7 +79,21 @@ body {
     margin-right: 10px;
 }
 
-#choice_of_x input[type='checkbox'],
+#x {
+    font-size: 15px;
+    margin: 8px 6px;
+    padding: 8px 8px;
+    height: 40px;
+    width: 57px;
+    border: 2px solid #857466;
+    color: #667785;
+    font-style: italic;
+    border-radius: 6px;
+    cursor: pointer;
+    outline: none;
+    font-family: 'Old Standard TT', serif;
+}
+
 #choice_of_r input[type='radio'] {
     width: 16px;
     height: 16px;

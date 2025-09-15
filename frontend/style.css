@@ -71,7 +71,7 @@ body {
 #main_form {
     font-size: 22px;
     text-align: left;
-    margin-top: 102px;
+    margin-top: 80px;
     margin-left: 20px;
 }
 
@@ -109,7 +109,7 @@ body {
 
 #choice_of_y {
     margin-top: 20px;
-    margin-bottom: 30px;
+    margin-bottom: 40px;
 }
 
 #y {
@@ -120,6 +120,7 @@ body {
     border-radius: 8px;
     background: white;
     opacity: 0.93;
+    cursor: pointer;
     font-family: 'Old Standard TT', sans-serif;
     font-size: 16px;
     color: #857466;
@@ -140,7 +141,7 @@ body {
 
 #button_container button {
     padding: 4px 6px;
-    margin-top: 18px;
+    margin-top: 14px;
     margin-right: 10px;
     width: 150px;
     height: 56px;
@@ -165,7 +166,7 @@ body {
     border: 2px solid #857466;
     border-radius: 14px;
     box-shadow: 0 2px 9px rgba(0, 0, 0, 0.1);
-    margin-top: 30px;
+    margin-top: 70px;
 }
 
 .error {

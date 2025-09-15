@@ -41,12 +41,13 @@ public class RequestHandler {
                 int x = Integer.parseInt(values.get("x"));
                 float y = Float.parseFloat(values.get("y"));
                 float r = Float.parseFloat(values.get("r"));
+                HitCheck hitCheck = new HitCheck(x, y, r);
                 DataFromRequest data = new DataFromRequest(x, y, r);
                 long end = System.nanoTime();
                 long time = end - start;
                 ZonedDateTime currentTime = ZonedDateTime.now(ZoneId.of("Europe/Moscow"));
                 String formattedTime = currentTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy H:mm:ss"));
-                jsonResponse = ResponseCreator.createJson(data, validation.wasThereHit(), time, formattedTime);
+                jsonResponse = ResponseCreator.createJson(data, hitCheck.wasThereHit(), time, formattedTime);
             }
         } catch (Exception e) {
             jsonResponse = ResponseCreator.createErrorJson(e.getMessage());

@@ -18,10 +18,10 @@ window.onload = function () {
 }
 
 
-async function sendRequest (checkedX, enteredY, selectedR) {
+async function sendRequest (selectedX, enteredY, selectedR) {
     const errorField = document.getElementById('error')
     const dataForRequest = {
-        x: checkedX,
+        x: selectedX,
         y: enteredY,
         r: selectedR
     }

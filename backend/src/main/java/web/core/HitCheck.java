@@ -1,4 +1,4 @@
-package web;
+package web.core;
 
 public class HitCheck {
     private final int x;

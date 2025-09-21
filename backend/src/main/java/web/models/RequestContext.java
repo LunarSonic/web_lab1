@@ -1,4 +1,5 @@
 package web.models;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,11 +11,13 @@ public class RequestContext {
     private boolean wasThereHit;
     private final long startTime;
     private List<String> errorMessages;
+    private String sessionId;
 
     public RequestContext(String rawQuery) {
         this.rawQuery = rawQuery;
+        this.sessionId = null;
         this.parameters = new HashMap<>();
-        this.errorMessages = null;
+        this.errorMessages = new ArrayList<>();
         this.startTime = System.nanoTime();
     }
 
@@ -56,5 +59,13 @@ public class RequestContext {
 
     public void setErrorMessages(List<String> errorMessages) {
         this.errorMessages = errorMessages;
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
     }
 }

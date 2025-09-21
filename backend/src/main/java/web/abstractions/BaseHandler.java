@@ -1,4 +1,5 @@
 package web.abstractions;
+import web.handlers.RequestHandler;
 import web.models.RequestContext;
 
 abstract public class BaseHandler implements Handler {
@@ -10,11 +11,27 @@ abstract public class BaseHandler implements Handler {
     }
 
     @Override
+    public Handler getNextHandler() {
+        return nextHandler;
+    }
+
+    @Override
     public void handle(RequestContext context) {
         process(context);
-        if (nextHandler != null && (context.getErrorMessages() == null || context.getErrorMessages().isEmpty())) {
-            nextHandler.handle(context);
+        if (context.getErrorMessages().isEmpty()) {
+            if (nextHandler != null) {
+                nextHandler.handle(context);
+            }
+        } else {
+            Handler last = nextHandler;
+            while (last != null && !(last instanceof RequestHandler)) {
+                last = last.getNextHandler();
+            }
+            if (last != null) {
+                last.handle(context);
+            }
         }
     }
+
     protected abstract void process(RequestContext context);
 }

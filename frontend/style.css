@@ -181,6 +181,12 @@ body {
     opacity: 0;
 }
 
+#error {
+    position: static;
+    margin-top: 10px;
+    text-align: center;
+}
+
 @keyframes fadeInAndFadeOut {
     0% {
         opacity: 0;

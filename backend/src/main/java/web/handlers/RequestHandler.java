@@ -1,9 +1,10 @@
 package web.handlers;
 import web.*;
 import web.abstractions.BaseHandler;
+import web.core.ResultHistory;
 import web.models.DataFromRequest;
 import web.models.RequestContext;
-import java.nio.charset.StandardCharsets;
+import web.models.Result;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -13,30 +14,34 @@ import java.util.logging.Logger;
 public class RequestHandler extends BaseHandler {
     private static final Logger logger = Logger.getLogger(RequestHandler.class.getName());
 
-    private static final String HTTP_RESPONSE = """
-            Connection: keep-alive
-            Content-Type: application/json
-            Content-Length: %d
-            
-            %s
-            """;
-
     @Override
     protected void process(RequestContext context) {
-        String jsonResponse;
+        String fullResponse;
+        String jsonBody;
         List<String> errors = context.getErrorMessages();
         if (!errors.isEmpty()) {
-            jsonResponse = ResponseCreator.createErrorJson(context.getErrorMessages());
-            logger.warning(String.join(", ", errors));
+            jsonBody = ResponseCreator.createErrorJsonBody(errors);
+            fullResponse = ResponseCreator.createFullResponse(jsonBody);
+            logger.warning(String.join(" ", errors));
         } else {
             DataFromRequest data = context.getData();
             long scriptTime = System.nanoTime() - context.getStartTime();
             ZonedDateTime currentTime = ZonedDateTime.now(ZoneId.of("Europe/Moscow"));
             String formattedTime = currentTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy H:mm:ss"));
-            jsonResponse = ResponseCreator.createJson(data, context.wasThereHit(), scriptTime, formattedTime);
+            String sessionId = context.getSessionId();
+            boolean wasThereHit = context.wasThereHit();
+
+            Result result = new Result(data.x(), data.y(), data.r(), wasThereHit, scriptTime, formattedTime);
+            ResultHistory.getInstance().addResult(sessionId, result);
+            jsonBody = ResponseCreator.createSuccessJsonBody(result);
+            String newSessionId = context.getSessionId();
+            if (newSessionId != null) {
+                fullResponse = ResponseCreator.createResponseWithCookie(jsonBody, newSessionId);
+            } else {
+                fullResponse = ResponseCreator.createFullResponse(jsonBody);
+            }
             logger.info("Успешная обработка запроса: x=" + data.x() + ", y=" + data.y() + ", r=" + data.r());
         }
-        String fullResponse = String.format(HTTP_RESPONSE, jsonResponse.getBytes(StandardCharsets.UTF_8).length, jsonResponse);
         System.out.print(fullResponse);
     }
 }

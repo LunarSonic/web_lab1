@@ -1,25 +1,51 @@
-import {initCanvas, drawPointOnCoordinatePlane, redraw} from "./canvas.js";
+import {initCanvas, drawPointOnCoordinatePlane, redraw} from "./canvas.js"
 const yInput = document.getElementById('y')
 const xSelect = document.getElementById('x')
 const rChoice = document.querySelectorAll('#choice_of_r input[type="radio"]')
+const errorField = document.getElementById('error')
 const mainForm = document.getElementById("main_form")
 const clearFormButton = document.getElementById('clear_form_button')
 const clearTableButton = document.getElementById('clear_table_button')
 const tableWithResults = document.getElementById("result_table")
 const floatPattern = /^-?(?:0|[1-9][0-9]*)(?:\.[0-9]+)?$/
 
-let lastSelectedR = null
-let currentR = null
+window.onload = async function () {
+    const history = await loadHistory()
+    if (history) {
+        updateTable(history)
+        updateCanvas(history)
+    }
+}
 
-window.onload = function () {
-    redraw()
-    let history = JSON.parse(localStorage.getItem('results') || '[]')
+async function loadHistory() {
+    try {
+        const response = await fetch('/api/history')
+        if (response.ok) {
+            return await response.json()
+        } else {
+            showMessage(errorField, `Ошибка при загрузке истории: ${response.status}`)
+        }
+    } catch (error) {
+        showMessage(errorField, `Ошибка: ${error.message}`)
+    }
+    return []
+}
+
+function updateTable(history) {
+    const tbody = tableWithResults.querySelector('tbody')
+    tbody.innerHTML = ''
     history.forEach(addNewRow)
 }
 
+function updateCanvas(history, r = null) {
+    redraw(r)
+    const ctx = initCanvas()
+    history.forEach(data => {
+        drawPointOnCoordinatePlane(ctx, parseInt(data.x, 10), parseFloat(data.y), data.hit)
+    })
+}
 
 async function sendRequest (selectedX, enteredY, selectedR) {
-    const errorField = document.getElementById('error')
     const dataForRequest = {
         x: selectedX,
         y: enteredY,
@@ -27,7 +53,7 @@ async function sendRequest (selectedX, enteredY, selectedR) {
     }
     try {
         const parameters = new URLSearchParams(dataForRequest).toString()
-        const response = await fetch(`/api?${parameters}`)
+        const response = await fetch(`/api/points?${parameters}`)
         if (response.ok) {
             const result = await response.json()
             let data = {
@@ -39,9 +65,8 @@ async function sendRequest (selectedX, enteredY, selectedR) {
                 scriptTime: result.scriptTime
             }
             addNewRow(data)
-            saveResultToLocalStorage(data)
-            const ctx = initCanvas()
-            drawPointOnCoordinatePlane(ctx, parseInt(result.x), parseFloat(result.y), result.hit)
+            const history = await loadHistory()
+            updateCanvas(history, parseFloat(selectedR))
         } else {
             if (errorField) {
                 showMessage(errorField, `Ошибка при отправке запроса: ${response.status}`)
@@ -56,21 +81,17 @@ async function sendRequest (selectedX, enteredY, selectedR) {
 
 
 function addNewRow(data) {
+    const { x, y, r, hit, serverTime, scriptTime } = data
     const tbody = tableWithResults.querySelector('tbody')
     let row = tbody.insertRow(-1)
-    row.insertCell(0).textContent = data.x
-    row.insertCell(1).textContent = data.y
-    row.insertCell(2).textContent = data.r
-    row.insertCell(3).textContent = data.hit ? 'Да' : 'Нет'
-    row.insertCell(4).textContent = data.serverTime
-    row.insertCell(5).textContent = data.scriptTime
+    row.insertCell(0).textContent = x
+    row.insertCell(1).textContent = y
+    row.insertCell(2).textContent = r
+    row.insertCell(3).textContent = hit ? 'Да' : 'Нет'
+    row.insertCell(4).textContent = serverTime
+    row.insertCell(5).textContent = scriptTime
 }
 
-function saveResultToLocalStorage(data) {
-    let savedResult = JSON.parse(localStorage.getItem('results') || '[]')
-    savedResult.push(data)
-    localStorage.setItem('results', JSON.stringify(savedResult))
-}
 
 function showMessage(element, message) {
     element.onanimationend = null
@@ -112,22 +133,34 @@ function clearForm() {
 clearFormButton.addEventListener('click', clearForm)
 
 
-function clearTable() {
-    localStorage.removeItem('results')
-    const tbody = document.getElementById('body_for_table')
-    tbody.innerHTML = ''
+async function clearTable() {
+    try {
+        const response = await fetch('/api/clear', {
+            method: 'POST'
+        })
+        if (response.ok) {
+            const tbody = document.getElementById('body_for_table')
+            tbody.innerHTML = ''
+            redraw()
+        } else {
+            if (errorField) {
+                showMessage(errorField, `Ошибка при очистке истории: ${response.status}`)
+            }
+        }
+    } catch (error) {
+        if (errorField) {
+            showMessage(errorField, `Ошибка: ${error.message}`)
+        }
+    }
 }
 clearTableButton.addEventListener('click', clearTable)
 
 
-function handleRadioChange(event) {
+async function handleRadioChange(event) {
     const currentRadio = event.target
-    if (lastSelectedR && lastSelectedR !== currentRadio) {
-        lastSelectedR.checked = false
-    }
-    lastSelectedR = currentRadio.checked ? currentRadio : null
-    currentR = parseFloat(currentRadio.value)
-    redraw(currentR)
+    const currentR = parseFloat(currentRadio.value)
+    const history = await loadHistory()
+    updateCanvas(history, currentR)
 }
 rChoice.forEach(radio => {
     radio.addEventListener('change', handleRadioChange)

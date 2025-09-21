@@ -12,8 +12,10 @@ public class App {
         logger.info("Сервер начал работу...");
         while (fcgiInterface.FCGIaccept() >= 0) {
             String queryString = FCGIInterface.request.params.getProperty("QUERY_STRING");
-            logger.info("Поступил запрос: " + queryString);
-            executor.execute(queryString);
+            String cookies = FCGIInterface.request.params.getProperty("HTTP_COOKIE");
+            String requestUri = FCGIInterface.request.params.getProperty("REQUEST_URI");
+            logger.info("Поступил запрос: " + requestUri);
+            executor.execute(requestUri, queryString, cookies);
         }
     }
 }

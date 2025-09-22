@@ -7,6 +7,7 @@ const mainForm = document.getElementById("main_form")
 const clearFormButton = document.getElementById('clear_form_button')
 const clearTableButton = document.getElementById('clear_table_button')
 const tableWithResults = document.getElementById("result_table")
+const tableBody = tableWithResults.querySelector('tbody')
 const floatPattern = /^-?(?:0|[1-9][0-9]*)(?:\.[0-9]+)?$/
 
 window.onload = async function () {
@@ -82,8 +83,7 @@ async function sendRequest (selectedX, enteredY, selectedR) {
 
 function addNewRow(data) {
     const { x, y, r, hit, serverTime, scriptTime } = data
-    const tbody = tableWithResults.querySelector('tbody')
-    let row = tbody.insertRow(-1)
+    let row = tableBody.insertRow(-1)
     row.insertCell(0).textContent = x
     row.insertCell(1).textContent = y
     row.insertCell(2).textContent = r
@@ -139,8 +139,7 @@ async function clearTable() {
             method: 'POST'
         })
         if (response.ok) {
-            const tbody = document.getElementById('body_for_table')
-            tbody.innerHTML = ''
+            tableBody.innerHTML = ''
             redraw()
         } else {
             if (errorField) {
